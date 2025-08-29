@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body {
+            width: 350px;
+            padding: 16px;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 14px;
+            background: #fff;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 18px;
+            color: #1a73e8;
+            font-weight: 600;
+        }
+        
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            padding: 8px;
+            border-radius: 6px;
+            background: #f8f9fa;
+        }
+        
+        .status.online { background: #e8f5e8; color: #137333; }
+        .status.offline { background: #ffeaea; color: #d93025; }
+        
+        .toggle-group {
+            margin-bottom: 12px;
+        }
+        
+        .toggle-group label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        .toggle-group label:hover {
+            background: #f8f9fa;
+        }
+        
+        .switch {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            background: #ccc;
+            border-radius: 10px;
+            transition: background 0.2s;
+        }
+        
+        .switch.on { background: #1a73e8; }
+        
+        .switch::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            top: 2px;
+            left: 2px;
+            transition: left 0.2s;
+        }
+        
+        .switch.on::after { left: 22px; }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: #f8f9fa;
+        }
+        
+        .stat-number {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a73e8;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #1a73e8;
+            background: #1a73e8;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover {
+            background: #1557b0;
+        }
+        
+        .btn.secondary {
+            background: white;
+            color: #1a73e8;
+        }
+        
+        .btn.secondary:hover {
+            background: #f8f9fa;
+        }
+        
+        /* NEW: Feedback Section */
+        .feedback-section {
+            margin-top: 16px;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: #f8f9fa;
+            display: none;
+        }
+        
+        .feedback-section.show {
+            display: block;
+        }
+        
+        .feedback-header {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1a73e8;
+        }
+        
+        .feedback-analysis {
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+        
+        .feedback-buttons {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+        
+        .feedback-btn {
+            flex: 1;
+            padding: 6px 8px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.2s;
+        }
+        
+        .feedback-btn.correct { border-color: #34a853; color: #34a853; }
+        .feedback-btn.incorrect { border-color: #ea4335; color: #ea4335; }
+        
+        .feedback-btn:hover {
+            background: #f8f9fa;
+        }
+        
+        .feedback-comment {
+            width: 100%;
+            height: 60px;
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .feedback-submit {
+            width: 100%;
+            padding: 6px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .version {
+            text-align: center;
+            font-size: 10px;
+            color: #666;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Truthly</h1>
+        <div id="serverStatus" class="status">
+            <span id="statusText">Checking...</span>
+        </div>
+    </div>
+    
+    <div class="toggle-group">
+        <label for="enableToggle">
+            <span>Enable Extension</span>
+            <div id="enableToggle" class="switch"></div>
+        </label>
+    </div>
+    
+    <div class="toggle-group">
+        <label for="autoAnalyzeToggle">
+            <span>Auto-analyze Results</span>
+            <div id="autoAnalyzeToggle" class="switch"></div>
+        </label>
+    </div>
+    
+    <div class="toggle-group">
+        <label for="cacheToggle">
+            <span>Cache Results</span>
+            <div id="cacheToggle" class="switch"></div>
+        </label>
+    </div>
+    
+    <div class="stats">
+        <div class="stat-card">
+            <div id="analyzedCount" class="stat-number">0</div>
+            <div>Analyzed</div>
+        </div>
+        <div class="stat-card">
+            <div id="trustworthyCount" class="stat-number">0</div>
+            <div>Trustworthy</div>
+        </div>
+    </div>
+    
+    <div class="buttons">
+        <button id="clearCacheBtn" class="btn secondary">Clear Cache</button>
+        <button id="openDashboardBtn" class="btn">Dashboard</button>
+    </div>
+    
+    <!-- NEW: Feedback Section -->
+    <div id="feedbackSection" class="feedback-section">
+        <div class="feedback-header">Provide Feedback</div>
+        <div id="feedbackAnalysis" class="feedback-analysis"></div>
+        <div class="feedback-buttons">
+            <button id="correctBtn" class="feedback-btn correct">Correct</button>
+            <button id="incorrectBtn" class="feedback-btn incorrect">Incorrect</button>
+        </div>
+        <textarea id="feedbackComment" class="feedback-comment" placeholder="Optional: Add your comments..."></textarea>
+        <button id="submitFeedback" class="feedback-submit">Submit Feedback</button>
+        <button id="closeFeedback" class="feedback-btn" style="margin-top: 4px;">Close</button>
+    </div>
+    
+    <div class="version">
+        Version 1.0 • Extension Mode: BART + LLaMA
+    </div>
+    
+    <script src="popup.js"></script>
+</body>
+</html>

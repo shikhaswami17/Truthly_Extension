@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "Truthly - Fact Checker",
+  "version": "1.0",
+  "description": "Real-time fact-checking for Google search results",
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "host_permissions": [
+    "*://www.google.com/*",
+    "*://google.com/*",
+    "http://localhost:5000/*",
+    "http://localhost:5001/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://www.google.com/search*",
+        "*://google.com/search*"
+      ],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_end"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Truthly Fact Checker"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png"
+  }
+}

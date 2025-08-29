@@ -1,0 +1,43 @@
+{
+  "name": "truthly-react-app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.3.0",
+    "@types/react": "^19.1.11",
+    "@types/react-dom": "^19.1.7",
+    "axios": "^1.11.0",
+    "cheerio": "^1.1.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "lucide-react": "^0.541.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^7.8.2",
+    "typescript": "^5.9.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.0",
+    "@babel/preset-env": "^7.22.0",
+    "@babel/preset-react": "^7.22.0",
+    "@babel/preset-typescript": "^7.27.1",
+    "autoprefixer": "^10.4.14",
+    "babel-loader": "^9.1.0",
+    "css-loader": "^6.11.0",
+    "html-webpack-plugin": "^5.5.0",
+    "postcss": "^8.4.24",
+    "postcss-loader": "^7.3.4",
+    "style-loader": "^3.3.4",
+    "tailwindcss": "^3.3.0",
+    "webpack": "^5.88.0",
+    "webpack-cli": "^5.1.0",
+    "webpack-dev-server": "^4.15.0"
+  },
+  "scripts": {
+    "start": "webpack serve --mode development",
+    "build": "webpack --mode production",
+    "dev": "webpack serve --mode development --open"
+  }
+}

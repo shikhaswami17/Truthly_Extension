@@ -1,0 +1,319 @@
+/* Truthly Chrome Extension Styles - Updated to match screenshot */
+
+.truthly-label {
+    margin: 6px 0;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-family: 'Google Sans', 'Segoe UI', Roboto, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.4;
+    border: 1px solid;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 100;
+}
+
+.truthly-label:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+}
+
+.truthly-label:hover .truthly-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.truthly-label.trustworthy {
+    background: linear-gradient(135deg, #e8f5e8 0%, #f0f9f0 100%);
+    border-color: #34a853;
+    color: #137333;
+}
+
+.truthly-label.untrustworthy {
+    background: linear-gradient(135deg, #ffeaea 0%, #fff5f5 100%);
+    border-color: #ea4335;
+    color: #d93025;
+}
+
+.truthly-label.error {
+    background: linear-gradient(135deg, #fff4e6 0%, #fff8e1 100%);
+    border-color: #fbbc04;
+    color: #ea8600;
+}
+
+.truthly-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.truthly-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.truthly-icon {
+    font-size: 14px;
+    font-weight: bold;
+    min-width: 16px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.truthly-label.trustworthy .truthly-icon {
+    color: #34a853;
+    background: rgba(52, 168, 83, 0.1);
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 12px;
+}
+
+.truthly-label.untrustworthy .truthly-icon {
+    color: #ea4335;
+    background: rgba(234, 67, 53, 0.1);
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 12px;
+}
+
+.truthly-label.error .truthly-icon {
+    color: #fbbc04;
+    background: rgba(251, 188, 4, 0.1);
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 12px;
+}
+
+.truthly-text {
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.25px;
+}
+
+.truthly-confidence {
+    font-weight: 700;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    min-width: 35px;
+    text-align: center;
+}
+
+.truthly-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.truthly-details-btn,
+.truthly-feedback-btn,
+.truthly-retry-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 14px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-decoration: none;
+    color: inherit;
+    white-space: nowrap;
+}
+
+.truthly-details-btn:hover,
+.truthly-feedback-btn:hover,
+.truthly-retry-btn:hover {
+    background: rgba(255, 255, 255, 1);
+    border-color: rgba(0, 0, 0, 0.25);
+    transform: translateY(-1px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.truthly-details-btn:active,
+.truthly-feedback-btn:active,
+.truthly-retry-btn:active {
+    transform: translateY(0);
+}
+
+/* Tooltip Styles */
+.truthly-tooltip {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #2d2d2d;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.4;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-5px);
+    transition: all 0.2s ease;
+    z-index: 1000;
+    margin-top: 4px;
+}
+
+.truthly-tooltip::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 20px;
+    width: 8px;
+    height: 8px;
+    background: #2d2d2d;
+    transform: rotate(45deg);
+}
+
+.truthly-tooltip-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.tooltip-confidence {
+    font-weight: 600;
+    color: #fff;
+}
+
+.tooltip-summary {
+    color: #ccc;
+    line-height: 1.3;
+    max-height: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tooltip-model {
+    font-size: 10px;
+    color: #999;
+    font-style: italic;
+}
+
+/* Loading indicator */
+.truthly-loading {
+    margin: 6px 0;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-family: 'Google Sans', 'Segoe UI', Roboto, Arial, sans-serif;
+    font-size: 13px;
+    background: #f8f9fa;
+    border: 1px solid #e8eaed;
+    color: #5f6368;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.truthly-spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid #e8eaed;
+    border-top: 2px solid #1a73e8;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .truthly-label {
+        margin: 4px 0;
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+    
+    .truthly-content {
+        gap: 8px;
+    }
+    
+    .truthly-details-btn,
+    .truthly-feedback-btn,
+    .truthly-retry-btn {
+        padding: 3px 8px;
+        font-size: 10px;
+    }
+    
+    .truthly-tooltip {
+        font-size: 11px;
+        padding: 8px;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .truthly-label.trustworthy {
+        background: #e8f5e8;
+        border-color: #137333;
+        border-width: 2px;
+    }
+    
+    .truthly-label.untrustworthy {
+        background: #ffeaea;
+        border-color: #d93025;
+        border-width: 2px;
+    }
+    
+    .truthly-label.error {
+        background: #fff4e6;
+        border-color: #ea8600;
+        border-width: 2px;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .truthly-label,
+    .truthly-details-btn,
+    .truthly-feedback-btn,
+    .truthly-retry-btn,
+    .truthly-spinner,
+    .truthly-tooltip {
+        transition: none;
+        animation: none;
+        transform: none;
+    }
+    
+    .truthly-label:hover,
+    .truthly-details-btn:hover,
+    .truthly-feedback-btn:hover,
+    .truthly-retry-btn:hover {
+        transform: none;
+    }
+}
+
+/* Focus styles for accessibility */
+.truthly-details-btn:focus,
+.truthly-feedback-btn:focus,
+.truthly-retry-btn:focus {
+    outline: 2px solid #1a73e8;
+    outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+    .truthly-label,
+    .truthly-loading,
+    .truthly-tooltip {
+        display: none;
+    }
+}
