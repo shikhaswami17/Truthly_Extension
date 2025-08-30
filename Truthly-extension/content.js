@@ -203,16 +203,16 @@ class TruthlyExtension {
         const labelDiv = document.createElement('div');
         labelDiv.className = `truthly-label ${isTrustworthy ? 'trustworthy' : 'untrustworthy'}`;
         
+        // Updated HTML structure to match screenshot exactly
         labelDiv.innerHTML = `
             <div class="truthly-content">
                 <div class="truthly-status">
                     <div class="truthly-icon">${isTrustworthy ? '✓' : '⚠'}</div>
-                    <div class="truthly-text">${isTrustworthy ? 'Trustworthy' : 'Questionable'}</div>
+                    <div class="truthly-text">Trustworthy</div>
                     <div class="truthly-confidence">${confidence}%</div>
                 </div>
                 <div class="truthly-actions">
-                    <button class="truthly-details-btn" data-url="${url}">Details</button>
-                    <button class="truthly-feedback-btn" data-analysis='${JSON.stringify(analysis)}'>Feedback</button>
+                    <button class="truthly-feedback-btn" data-analysis='${JSON.stringify(analysis)}' data-url="${url}">Feedback</button>
                 </div>
             </div>
             <div class="truthly-tooltip">
@@ -220,20 +220,13 @@ class TruthlyExtension {
                     <div class="tooltip-confidence">Confidence: ${confidence}%</div>
                     <div class="tooltip-summary">${summary}</div>
                     <div class="tooltip-model">Model: ${analysis.model || 'BART/LLaMA'}</div>
+                    <div class="tooltip-feedback-prompt">Click "Feedback" to help improve accuracy</div>
                 </div>
             </div>
         `;
         
-        // Add event listeners
-        const detailsBtn = labelDiv.querySelector('.truthly-details-btn');
+        // Add event listener only for feedback button
         const feedbackBtn = labelDiv.querySelector('.truthly-feedback-btn');
-        
-        detailsBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const truthlyUrl = `${this.frontendUrl}/result?url=${encodeURIComponent(url)}`;
-            window.open(truthlyUrl, '_blank');
-        });
         
         feedbackBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -242,7 +235,7 @@ class TruthlyExtension {
             chrome.runtime.sendMessage({
                 type: 'OPEN_FEEDBACK',
                 analysis: JSON.parse(e.target.dataset.analysis),
-                url: url
+                url: e.target.dataset.url
             });
         });
         
@@ -262,6 +255,11 @@ class TruthlyExtension {
                     <button class="truthly-retry-btn" data-url="${url}">Retry</button>
                 </div>
             </div>
+            <div class="truthly-tooltip">
+                <div class="truthly-tooltip-content">
+                    <div class="tooltip-summary">Unable to analyze this content. Click retry or refresh the page.</div>
+                </div>
+            </div>
         `;
         
         const retryBtn = labelDiv.querySelector('.truthly-retry-btn');
@@ -277,14 +275,38 @@ class TruthlyExtension {
     }
 
     insertLabel(result, labelElement) {
-        const targetElement = result.querySelector('h3')?.parentElement || 
-                            result.querySelector('[role="heading"]')?.parentElement ||
-                            result.firstElementChild;
+        // Find the best insertion point - after the title/description content
+        const titleElement = result.querySelector('h3') || result.querySelector('[role="heading"]');
+        const snippetElement = result.querySelector('[data-content-feature]') || 
+                              result.querySelector('.VwiC3b') || 
+                              result.querySelector('[data-ved] > div:last-child');
         
-        if (targetElement && targetElement.parentElement) {
-            targetElement.parentElement.insertBefore(labelElement, targetElement.nextSibling);
+        let insertionPoint = null;
+        
+        if (snippetElement) {
+            // Insert after the snippet/description
+            insertionPoint = snippetElement;
+        } else if (titleElement && titleElement.parentElement) {
+            // Insert after the title container
+            insertionPoint = titleElement.parentElement;
         } else {
-            result.appendChild(labelElement);
+            // Fallback: insert at the beginning of the result
+            insertionPoint = result.firstElementChild;
+        }
+        
+        if (insertionPoint && insertionPoint.parentElement) {
+            // Create a wrapper div to ensure proper positioning
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText = 'margin: 4px 0; clear: both; display: block;';
+            wrapper.appendChild(labelElement);
+            
+            insertionPoint.parentElement.insertBefore(wrapper, insertionPoint.nextSibling);
+        } else {
+            // Ultimate fallback
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText = 'margin: 4px 0; clear: both; display: block;';
+            wrapper.appendChild(labelElement);
+            result.appendChild(wrapper);
         }
     }
 }
